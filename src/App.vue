@@ -16,6 +16,9 @@
 	body {
 		font-family: poppins;
 		background: #444;
+		/* background-image: url("/fabric_bkg.jpg"); */
+		background-repeat: no-repeat;
+		background-size: cover;
 		color: white;
 	}
 

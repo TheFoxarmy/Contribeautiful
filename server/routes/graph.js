@@ -16,7 +16,6 @@ router.get('/:user/:year', async(req, res) => {
 	if(!access_token)
 		res.status(404);
 	const {login} = await GitUtils.getGitHubProifle(access_token);
-	console.log(login)
 	const repo = await GitUtils.getRepo(login, access_token);
 	GitUtils.commitsFromYear(repo, year, data => {
 		if(!data?.every(item => item == 0))
@@ -54,13 +53,17 @@ router.post('/', async(req, res) => {
 			res.status(500).send('Failed to create repo');
 	}
 
-	const repo = await GitUtils.getRepo(login, access_token);
-	const lastID = await GitUtils.makeCommits(repo, year, commitData, login, email);
+	const repo = await GitUtils.getRepo(login, access_token); // Clone or open the repo
+	const lastID = await GitUtils.makeCommits(repo, year, commitData, login, email); // Make all the commits and get the last ID
+	
+	const {graph} = await userCol.findOneAndUpdate({_id: user}, {$set: {lastCommit: lastID}});
+	
 	res.status(201).send(lastID);
 
-	// const {graph} = await userCol.findOneAndUpdate({_id: user}, {$set: {lastCommit: lastID}});
 });
+router.patch('/', async(req, res) => {
 
+});
 const authHeader = token => {return {'Authorization': `token ${token}`}};
 
 module.exports = router;

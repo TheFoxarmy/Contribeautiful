@@ -7,12 +7,12 @@ A vue & express webapp to generate custom GitHub contribution history!
 # TODO
 
 ## Definitely
-- REDO THAT GOD AWFUL DESIGN
+- ~~REDO THAT GOD AWFUL DESIGN~~
 - User prompts of completed, error etc
-- Storing the last commit in the DB so we don't clone a repo with things the app didn't create
+- ~~Storing the last commit in the DB so we don't clone a repo with things the app didn't create~~
 - Revoke authorization and delete data
 - Tooltip of the date you're drawing on
-- Calendar stops at Dec 31st
+- ~~Calendar stops at Dec 31st~~
 - Switch to ES6 modules for the backend instead of CommonJS
 ## Possible
 - Edit none-destructively: check for commits already made that day and not commit if we don't need to

@@ -15,9 +15,9 @@
 				:key="index"
 				class="placeholder"
 			/>
-			<div v-for="(day, dayIndex) in drawingBoard" :key="dayIndex"
+			<div v-for="(day, dayIndex) in this.drawingBoard" :key="dayIndex"
 				:class="`day day-${day}`"
-				@mousedown="holdingDown = true; colorDay(dayIndex)" @mouseup="holdingDown = false"
+				@mousedown="() => {holdingDown = true; colorDay(dayIndex)}" @mouseup="holdingDown = false"
 				@mouseover="colorDay(dayIndex)"
 				v-bind:style="`background: #${colors[day]}`" />
 		</div>
@@ -39,6 +39,7 @@ import {initializeEmptyCanvas, yearStartOffset} from '../../Utils';
 let currentColor = 1;
 
 let holdingDown = false;
+let drawingBoard;
 const lightColors = ['ebedf0', '9be9a8', '40c463', '30a14e', '216e39'];
 const darkColors  = ['161b22', '01311f', '034525', '0f6d31', '00c647'];
 const colors = lightColors;
@@ -51,12 +52,14 @@ export default {
 		this.initialize();
 	},
 	data() {
-		return {drawingBoard: this.drawingBoard, holdingDown, colors, currentColor, lightColors, darkColors};
+		return {drawingBoard, holdingDown, colors, currentColor, lightColors, darkColors};
 	},
 	methods: {
 		colorDay(dayIndex) {
-			if(this.holdingDown)
+			if(this.holdingDown) {
+				console.log('DRAWING!')
 				this.drawingBoard[dayIndex] = this.currentColor;
+			}
 		},
 		updateHoldingDown(val) {
 			holdingDown = val;
@@ -86,8 +89,8 @@ export default {
 			});
 			reader.readAsDataURL(file);
 		},
-		initialize() {
-			this.drawingBoard = initializeEmptyCanvas(this.year);
+		initialize(drawingBoard = null) {
+			this.drawingBoard = drawingBoard || initializeEmptyCanvas(this.year);
 		},
 		yearStartOffset
 	}

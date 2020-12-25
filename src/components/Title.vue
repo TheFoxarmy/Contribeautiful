@@ -14,5 +14,6 @@ export default {
 	}
 	#title span:last-child {
 		color: hotpink;
+		font-weight: bolder;
 	}
 </style>

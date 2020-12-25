@@ -7,7 +7,11 @@
 				<img id="profile-picture" :src="githubProfile?.avatar_url" alt="profile pic" >
 				<div class="text">
 					<h3 id="profile-name" v-text="githubProfile?.login" />
-					<p>Last Commit: </p>
+					<p>Last Commit:
+						<a 	id="last-commit"
+							:href="`https://github.com/${githubProfile.login}/contribeautiful_data/commit/${userData.lastCommit}`"
+							v-text="userData.lastCommit" />
+					</p>
 				</div>
 			</div>
 			<main>
@@ -64,8 +68,10 @@ export default {
 	methods: {
 		async submit() {
 			let commitData = this.$refs.canvas.drawingBoard;
-			if(editing) {
-				console.log('editing');
+			let method = 'POST';
+			if(this.editing) {
+				commitData = commitData.map((newVal, index) => newVal - this.originalData[index]);
+				method = 'PATCH';
 			}
 			const body = {
 				user: localStorage.getItem('userID'),
@@ -74,7 +80,7 @@ export default {
 			};
 			try {
 				const req = await fetch(`${process.env.VUE_APP_SERVER_BASE_URL}/graph`, {
-					method: 'POST',
+					method,
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify(body)
 				});
@@ -88,7 +94,7 @@ export default {
 			try {
 				const req = await fetch(`${process.env.VUE_APP_SERVER_BASE_URL}/graph/${localStorage.getItem('userID')}/${this.selectedYear}`);
 				if(req.ok) {
-					this.$refs.canvas.drawingBoard = await req.json();
+					this.$refs.canvas.initialize(await req.json());
 					this.editing = true;
 					this.originalData = this.$refs.canvas.drawingBoard;
 				} else {
@@ -132,9 +138,11 @@ export default {
 		border-radius: 25px;
 		box-shadow: 0 0 5px rgba(0, 0, 0, 1);
 		overflow: hidden;
+		word-wrap: break-word;
+		max-width: 300px;
 	}
 	#user img {
-		max-width: 300px;
+		max-width: 100%;
 	}
 	#user .text {
 		padding: 1em;
